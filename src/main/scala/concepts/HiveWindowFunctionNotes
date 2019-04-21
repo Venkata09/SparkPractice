@@ -1,0 +1,126 @@
+create table clickstable (
+  date DATE,
+  clicks INT
+  );
+
+insert into clickstable values ('2012-05-01', 2230);
+insert into clickstable values ('2012-05-02', 3150);
+insert into clickstable values ('2012-05-03', 5520);
+insert into clickstable values ('2012-05-04', 1330);
+insert into clickstable values ('2012-05-05', 2260);
+insert into clickstable values ('2012-05-06', 3540);
+insert into clickstable values ('2012-05-07', 2330);
+
+
+create table products_window_function (
+  key String,
+  product_code String,
+  cost int
+  );
+
+insert into clickstable values ('2012-05-01', 2230);
+insert into clickstable values ('2012-05-02', 3150);
+insert into clickstable values ('2012-05-03', 5520);
+insert into clickstable values ('2012-05-04', 1330);
+insert into clickstable values ('2012-05-05', 2260);
+insert into clickstable values ('2012-05-06', 3540);
+insert into clickstable values ('2012-05-07', 2330);
+
+
+insert into products_window_function (key, product_code, cost) values ('1','EU',5);
+insert into products_window_function (key, product_code, cost) values ('2','UK',3);
+insert into products_window_function (key, product_code, cost) values ('2','EU',6);
+
+1      UK              20
+1      US              10
+1      EU              5
+2      UK              3
+2      EU              6
+
+
+select key, product_code, cost , sum(cost) over (partition by key, product_code order by key, product_code)
+from products_window_function;
+
+1       EU      5       5
+1       US      20      30
+1       US      10      30
+2       EU      6       6
+2       UK      3       3
+
+select key, product_code, cost , sum(cost) over (partition by key) from products_window_function;
+
+1       US      10      35
+1       EU      5       35
+1       US      20      35
+2       EU      6       9
+2       UK      3       9
+
+if I set two columns, I am getting this output.
+
+1       EU      5       5
+1       US      20      30
+1       US      10      30
+2       EU      6       6
+2       UK      3       3
+
+
+
+
+CREATE TABLE sales (dealer VARCHAR(25), make VARCHAR(25), type VARCHAR(25), day INT);
+INSERT INTO sales (dealer, make, type, day) VALUES
+("Xyz", "Highlander", "SUV", "0"),
+("Xyz", "Prius", "HATCH", "1"),
+("Xyz", "Prius", "HATCH", "2"),
+("Xyz", "Prius", "HATCH", "3"),
+("Xyz", "Versa", "HATCH", "1"),
+("Xyz", "Versa", "HATCH", "2"),
+("Xyz", "Versa", "HATCH", "3"),
+("Xyz", "S3", "SEDAN", "1"),
+("Xyz", "S3", "SEDAN", "2"),
+("Abc", "Forrester", "SUV", "1");
+
+Inner query does counting,
+middle query performs rank() and the
+outer query limits on rank.
+
+SELECT dealer, make, rank, type FROM (  SELECT dealer, make, rank() OVER (PARTITION BY type ORDER BY count DESC) AS rank, type FROM (SELECT dealer, make, count(*) AS count, type FROM Sales WHERE dealer = "Xyz" GROUP BY dealer, type, make) CountedSales) RankedSales WHERE RankedSales.rank < 3;
+
+
+CREATE TABLE IF NOT EXISTS buyerItemTable
+(
+BUYER_ID BIGINT,
+ITEM_ID BIGINT,
+CREATED_TIME STRING
+)
+
+SELECT dealer, make, rank, type FROM (
+    SELECT dealer, make, rank() OVER (PARTITION BY type ORDER BY count DESC) AS rank, type FROM (
+        SELECT dealer, make, count(*) AS count, type FROM Sales WHERE dealer = "Xyz"
+        GROUP BY dealer, type, make
+    ) CountedSales
+) RankedSales
+WHERE RankedSales.rank < 3;
+
+
+
+Actually, there are 4 Types of the partitioning
+
+PARTITION BY with one partitioning column, no ORDER BY or window specification
+
+PARTITION BY with two partitioning columns, no ORDER BY or window specification
+
+PARTITION BY with one partitioning column, one ORDER BY column, and no window specification
+
+PARTITION BY with two partitioning columns, two ORDER BY columns, and no window specification
+
+SELECT a, SUM(b) OVER (PARTITION BY c, d ORDER BY e, f)
+FROM T;
+
+PARTITION BY with partitioning, ORDER BY, and window specification
+
+
+
+
+
+
+

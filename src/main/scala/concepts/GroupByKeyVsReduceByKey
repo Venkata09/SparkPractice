@@ -1,0 +1,110 @@
+
+Filtering the data:
+
+df.filter($"state" === "New York"). ==> This will return another data frame rerader.
+
+
+You can specify multiple conditions in filter using OR (||) or AND (&&)
+
+
+df.filter($"state" === "New York" || $"state" === "Washington").
+
+
+    You can also use “WHERE” in place of “FILTER”
+
+
+df.where($"state" === "New York" || $"state" === "Washington").
+
+
+If you want to go with the NOT EQUALS TO ==> Go with this approach
+
+========================================================================================================================
+
+NOT EQUAL TO
+
+
+df.filter($"state" !== "New York")
+
+
+df.filter($"state".equalTo("New York"))
+
+df.filter($"state".notEqual("New York"))
+
+========================================================================================================================
+IN or NOT IN conditions are used in FILTER/WHERE
+
+
+df_pres.filter($"pres_bs" in ("New York","Ohio","Texas"))
+
+
+df_pres.filter($"pres_bs".isin("New York","Ohio","Texas"))
+
+NOT in
+
+df_pres.filter(!$"pres_bs".isin("New York","Ohio","Texas"))
+
+========================================================================================================================
+
+In SQL, if we have to check multiple conditions for any column value then we use case statament. In Spark SQL dataframes also we can replicate same functionality by using WHEN clause multiple times,
+once for each conditional check. No requirement to add CASE keyword though. So let’s see an example to see how to check for multiple conditions and replicate SQL CASE statement in Spark SQL.
+
+
+
+df_pres.select($"pres_name",$"pres_dob",$"pres_bs",
+ when($"pres_bs"==="Virginia","VA").when($"pres_bs"==="Massachusetts","MA")
+.when($"pres_bs"==="Ohio","OH").otherwise("Others").alias("state_abbr")).show()
+
+
+SORT is used to order resultset on the basis of values for any selected column. The syntax is to use sort function with column name inside it. We can also specify asending or descending order for sorting,
+default is ascending. In our dataframe, if we want to order the resultset on the basis of the state in which President was born then we will use below query:
+
+
+df_pres.select($"pres_id",$"pres_dob",$"pres_bs").sort($"pres_bs".asc).show()
+
+df_pres.select($"pres_id",$"pres_dob",$"pres_bs").sort($"pres_bs".desc).show()
+
+
+If you want to specify SORTing on the basis of multiple columns then use below query:
+
+
+
+df_pres.select($"pres_id",$"pres_dob",$"pres_bs").sort($"pres_bs".desc,$"pres_dob".asc).show()
+
+You can also sort the result set on the basis of derived columns. For this example we will refer to previous post and will apply sort to the derived column.
+
+
+df_pres.select
+($"pres_name",$"pres_dob",$"pres_bs",when($"pres_bs"==="Virginia","VA")
+.when($"pres_bs"==="Massachusetts","MA")
+.when($"pres_bs"==="Ohio","OH").otherwise("Others").alias("state_abbr"))
+
+.sort($"state_abbr".desc).show()
+
+
+
+You can also apply sorting to the expression in SORT function. Let’s see the example below:
+
+df_pres.select($"pres_name",$"pres_dob",$"pres_bs").sort(when($"pres_bs"==="Virginia","VA").when($"pres_bs"==="Massachusetts","MA").when($"pres_bs"==="Ohio","OH").otherwise("Others").desc).show()
+
+
+========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
