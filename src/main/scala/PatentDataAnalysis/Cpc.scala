@@ -3,7 +3,7 @@ package PatentDataAnalysis
 import org.apache.commons.lang.StringUtils
 
 /**
- * Created by callport on 9/25/15.
+ * Created by vdokku on 9/25/15.
  */
 case class Cpc(familyId: String, id: String, country: String,
                deltaDate: String,

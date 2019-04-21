@@ -4,7 +4,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
 /**
-  * Created by sakoirala on 5/22/17.
+  * Created by vdokku on 5/22/17.
   */
 object GroupByExample extends App {
 

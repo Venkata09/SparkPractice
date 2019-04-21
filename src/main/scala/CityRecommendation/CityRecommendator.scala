@@ -13,10 +13,14 @@ object CityRecommendator {
 
   def main(args: Array[String]): Unit = {
 
-    System.setProperty("hadoop.home.dir", "C:\\hadoop-common-2.2.0-bin-master\\")
+//    System.setProperty("hadoop.home.dir", "C:\\hadoop-common-2.2.0-bin-master\\")
 
 
-    val spark: SparkSession = SparkSession.builder().master("local[4]").appName("CityRecommendation").getOrCreate()
+    val spark: SparkSession = SparkSession.builder()
+      .master("local[4]")
+      .appName("CityRecommendation")
+      .getOrCreate()
+
     val sc: SparkContext = spark.sparkContext
     val ratingsRDD = sc.textFile("src/main/resources/CityRecommendation/ratings.csv")
     val cityRDD = sc.textFile("src/main/resources/CityRecommendation/city.csv")

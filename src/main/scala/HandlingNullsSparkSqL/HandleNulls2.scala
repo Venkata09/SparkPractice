@@ -19,7 +19,9 @@ object HandleNulls2 {
     System.setProperty("hadoop.home.dir", "C:\\hadoop-common-2.2.0-bin-master\\")
 
 
-    val spark: SparkSession = SparkSession.builder().master("local[4]").appName("<<<<<<<<<<<< ByKeyImplementation>>>>>>>>>>> ").getOrCreate()
+    val spark: SparkSession = SparkSession.builder()
+      .master("local[4]").appName("<<<<<<<<<<<< ByKeyImplementation>>>>>>>>>>> ")
+      .getOrCreate()
     val sc: SparkContext = spark.sparkContext
 
     import spark.implicits._

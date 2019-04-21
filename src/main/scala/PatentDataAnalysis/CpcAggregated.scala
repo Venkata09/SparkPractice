@@ -1,7 +1,7 @@
 package PatentDataAnalysis
 
 /**
- * Created by callport on 9/25/15.
+ * Created by vdokku on 9/25/15.
  */
 case class CpcAggregated(family_identifier_cur:String,
                          id: String,
