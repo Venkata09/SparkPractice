@@ -77,6 +77,8 @@ object HiveContextTest {
 
 
 
+    result.show()
+
 
 
 

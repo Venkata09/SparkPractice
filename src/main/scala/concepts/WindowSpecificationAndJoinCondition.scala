@@ -24,6 +24,10 @@ object WindowSpecificationAndJoinCondition {
       (filePath: String) => filePath.split("\\.")(4))
 
 
+    import org.apache.spark.sql.functions
+    val starts_with_UDF = sparkSession.udf.register("test_starts_with", (filePath: String) =>
+      !filePath.startsWith("0") && !filePath.startsWith("D") &&  !filePath.startsWith("1") && !filePath.startsWith("R") && !filePath.startsWith("P"))
+
     import sparkSession.implicits._
 
     val rdd1 = sparkSession.sparkContext.textFile("src/main/resources/window_example/orgData.txt")
