@@ -24,3 +24,7 @@ This requires loading all the key values into memory at once to perform groupby.
 # How did I use the bucket-by in order to avoid the Spark Shuffle. Query Tuning & Performance. 
 
 # Dynamic Resource Allocation - How we implemented in PROD environment. 
+
+# How the CACHE & PERSIST will be used or applied in the SPARK. 
+
+
