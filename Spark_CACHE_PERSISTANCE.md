@@ -31,3 +31,52 @@ In general compressions schemes used with columnar stores allow queries on compr
 
 
 
+----------------------------------------------------------------------
+
+
+Another istance about the cache 
+
+
+
+```scala
+
+We are using Spark 2.2.0. We have a 1.5 TB of data in a hive table. We have 80 node cluster where each node has about 512 GB RAM and 40 cores.
+
+I am accessing this data using Spark SQL. With plain Spark SQL (without caching) simple command like getting distinct count of a particular column value takes about 13 sec. But when I run the same command after caching the table it takes more than 10 min. Not sure what is the issue?
+
+export SPARK_MAJOR_VERSION=2
+spark-shell --master yarn --num-executors 40 --driver-memory 5g --executor-memory 100g --executor-cores 5
+spark.conf.set("spark.sql.shuffle.partitions", 10)
+val df = spark.sql("select * from analyticalprofiles.customer_v2")
+df.createOrReplaceTempView("tmp")
+spark.time(spark.sql("select count(distinct(household_number)) from tmp").show())
+>> Time taken: 13927 ms
+
+
+
+import  org.apache.spark.storage.StorageLevel
+val df2 = df.persist(StorageLevel.MEMORY_ONLY)
+df2.createOrReplaceTempView("tmp2")
+spark.time(spark.sql("select count(distinct(household_number)) from tmp2").show())
+>> 1037482 ms ==> FIRST TIME - okay if this is more
+spark.time(spark.sql("select count(distinct(household_number)) from tmp2").show())
+>> 834740 ms  ==> SECOND TIME - Was expecting much faster execution ???
+
+
+
+
+```
+
+
+
+You can increase the number of executors and decrease the executor memory with the below formula
+
+  SPARK_EXECUTOR_CORES (--executor-cores) : 5 
+
+  Number of Executors (--num-executors) : (number of nodes) *  (number of cores) /(executor cores) -1 (for Application Master) = (80*40)/5 ~ 640-1 = 639
+
+  SPARK_EXECUTOR_MEMORY (--executor-memory): Memory/(Number of Executors/Number of Nodes):  512/(639/80) ~ 64 GB
+If you want to persist the dataframe use StorageLevel.MEMORY_AND_DISK_SER . If the Memory (RAM) is full , it will save in Disk.
+
+
+
