@@ -1,11 +1,19 @@
 # Cache & persistance secrets.
 
+
+
+
+
 ### This is what spark documentation says w.r.t CACHE & PERSISTANCE. 
+
+
+### If I'm trying to cache a huge DataFrame (ex: 100GB table) and when I perform query on the cached DataFrame will it perform full table scan? How the spark will index data. Spark documentation says:
 
 
 ```scala
 
-Spark SQL can cache tables using an in-memory columnar format by calling spark.catalog.cacheTable("tableName") or dataFrame.cache(). 
+Spark SQL can cache tables using an in-memory columnar format by calling 
+spark.catalog.cacheTable("tableName") or dataFrame.cache(). 
 Then Spark SQL will scan only required columns and will automatically tune compression to minimize memory usage and GC pressure. 
 You can call spark.catalog.uncacheTable("tableName") to remove the table from memory.
 
