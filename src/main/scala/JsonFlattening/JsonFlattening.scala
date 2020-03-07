@@ -53,6 +53,7 @@ object JsonFlattening {
 
     println(" <<<<<<<<<<<<<<<<< AFTER FLATTENING >>>>>>>>>>>>>>>>>>>>>>>>>>> ")
 
+    flattened.show()
 
     flattened.printSchema
 
